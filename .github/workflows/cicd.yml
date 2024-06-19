@@ -18,4 +18,21 @@ jobs:
       - name: Build Project
         run: mvn clean install -DskipTests
       - name: Login to docker hub
-        run: docker login -u username password
+        run: docker login -u ${{secrets.DOCKER_USERNAME}} ${{secrets.DOCKER_PASSWORD}}
+      - name: Build docker image
+        run: docker build -t bikashshah15/awsproject .
+      - name: Publish image to docker
+        run: docker push bikashshah15/awsproject:latest
+
+  deploy:
+    needs: build
+    runs-on: [aws-ec2]
+    steps:
+      - name: Pull Image from docker hub
+        run: docker pull bikashshah15/awsproject:latest
+      - name: Delete old container
+        run: docker rm -f awsproject || true
+      - name: Run Docker container
+        run: docker run -d -p 8080:8080 --name awsproject bikashshah15/awsproject
+
+

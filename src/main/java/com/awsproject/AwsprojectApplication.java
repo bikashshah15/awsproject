@@ -11,7 +11,7 @@ public class AwsprojectApplication {
 
     @GetMapping("/home")
     public String home(){
-        return "Hello World !!!!";
+        return "It's me Bikash Shah";
     }
 
     public static void main(String[] args) {
